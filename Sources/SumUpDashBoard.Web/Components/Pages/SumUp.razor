@@ -1,0 +1,32 @@
+﻿@page "/SumUp"
+@using SumUpDashBoard.BusinessModels.ComptabilityModels
+@attribute [StreamRendering(true)]
+@attribute [OutputCache(Duration = 5)]
+@inject SumUpApiClient WeatherApi
+
+<PageTitle>Weather</PageTitle>
+
+<h1>Weather</h1>
+
+<p>This component demonstrates showing data loaded from a backend API service.</p>
+
+<MudDataGrid T=SumUpTransactionModel Items="SumUpTransactions">
+    <Columns>
+        <PropertyColumn Property="x => x.Code" Title="Nr" />
+        <PropertyColumn Property="x => x.Date" />
+        <PropertyColumn Property="x => x.MontantTransactionCredit" />
+        <PropertyColumn Property="x => x.Solde" />
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="SumUpTransactionModel" InfoFormat="{first_item}-{last_item} / {all_items}" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+    private SumUpTransactionModel[] SumUpTransactions = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        SumUpTransactions = await WeatherApi.GetSumUpTransactionsAsync();
+    }
+}
